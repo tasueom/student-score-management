@@ -116,3 +116,34 @@ def get_scores():
             cursor.close()
         if conn:
             conn.close()
+
+def get_subject_averages():
+    """과목별 평균 점수를 조회하고 튜플로 반환합니다. (국어, 영어, 수학)"""
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(f"""
+            SELECT 
+                AVG(kor) as avg_kor,
+                AVG(eng) as avg_eng,
+                AVG(math) as avg_math
+            FROM {TABLE_NAME}
+        """)
+        result = cursor.fetchone()
+        if result and result[0] is not None:
+            # 평균을 소수점 둘째 자리까지 반올림
+            avg_kor = round(float(result[0]), 2)
+            avg_eng = round(float(result[1]), 2)
+            avg_math = round(float(result[2]), 2)
+            return (avg_kor, avg_eng, avg_math)
+        return (0, 0, 0)  # 데이터가 없을 경우
+    except mysql.connector.Error as err:
+        print(f"Subject average retrieval failed: {err}")
+        return (0, 0, 0)
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()

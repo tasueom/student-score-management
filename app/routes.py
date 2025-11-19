@@ -23,4 +23,6 @@ def input():
 @app.route('/view')
 def view():
     scores = db.get_scores()
-    return render_template('view.html', scores=scores)
+    subject_averages = db.get_subject_averages()
+    chart_data = service.format_chart_data(subject_averages)
+    return render_template('view.html', scores=scores, chart_data=chart_data)
