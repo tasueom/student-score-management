@@ -26,3 +26,13 @@ def view():
     subject_averages = db.get_subject_averages()
     chart_data = service.format_chart_data(subject_averages)
     return render_template('view.html', scores=scores, chart_data=chart_data)
+
+@app.route('/export_excel')
+def export_excel():
+    flash("준비중입니다.")
+    return redirect(url_for('view'))
+
+@app.route('/export_pdf')
+def export_pdf():
+    flash("준비중입니다.")
+    return redirect(url_for('view'))

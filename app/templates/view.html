@@ -4,6 +4,8 @@
 <div class="view-container">
     <main>
         <h2>성적 조회</h2>
+        <a href="{{ url_for('export_excel') }}">엑셀 다운로드</a>
+        <a href="{{ url_for('export_pdf') }}">PDF 다운로드</a>
         <div>
             <table>
                 <thead>
