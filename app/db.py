@@ -1,12 +1,17 @@
 import mysql.connector
+from dotenv import load_dotenv
+import os
+
+# .env 파일 로드
+load_dotenv()
 
 base_config = {
-    "host": "localhost",   # MySQL 서버 주소 (로컬)
-    "user": "root",        # MySQL 계정
-    "password": "1234"     # MySQL 비밀번호
+    "host": os.environ.get('DB_HOST', 'localhost'),
+    "user": os.environ.get('DB_USER', 'root'),
+    "password": os.environ.get('DB_PASSWORD'),
 }
 
-DB_NAME = "scoredb"
+DB_NAME = os.environ.get('DB_NAME', 'scoredb')
 
 table_name = "scores"
 

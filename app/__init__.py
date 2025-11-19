@@ -1,9 +1,14 @@
 from flask import Flask
+from dotenv import load_dotenv
+import os
+
+# .env 파일 로드
+load_dotenv()
 
 app = Flask(__name__)
 
 def create_app():
-    app.config['SECRET_KEY'] = 'secret_key1234'
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback-secret-key')
     
     from app import routes
     
