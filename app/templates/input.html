@@ -5,7 +5,7 @@
     <h2>성적 입력</h2>
 </main>
 <div>
-    <form method="post" action="{{ url_for('input') }}">
+    <form method="post" action="{{ url_for('input') }}" onsubmit="return validateForm()">
         <div>
             <label for="name">이름</label>
             <input type="text" id="name" name="name" required>
