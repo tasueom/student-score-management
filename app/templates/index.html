@@ -3,5 +3,18 @@
 {% block content %}
 <main>
     <h2>성적표 저장 프로그램</h2>
+    <div class="readme-container">
+        <div id="readme-content"></div>
+    </div>
 </main>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    const readmeMarkdown = {{ readme_content|tojson }};
+    const readmeElement = document.getElementById('readme-content');
+    if (readmeElement && readmeMarkdown) {
+        readmeElement.innerHTML = marked.parse(readmeMarkdown);
+    }
+</script>
 {% endblock %}

@@ -1,9 +1,19 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app, service, db
+import os
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # README.md 파일 읽기
+    readme_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'README.md')
+    readme_content = ''
+    try:
+        with open(readme_path, 'r', encoding='utf-8') as f:
+            readme_content = f.read()
+    except FileNotFoundError:
+        readme_content = 'README.md 파일을 찾을 수 없습니다.'
+    
+    return render_template('index.html', readme_content=readme_content)
 
 @app.route('/input', methods=['GET', 'POST'])
 def input():
