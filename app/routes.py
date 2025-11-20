@@ -43,7 +43,7 @@ def signin():
         student = db.get_student(id)
         if student and chk_pw(pwd, student[1]):
             session['id'] = id
-            session['name'] = student[2]
+            session['name'] = student[3]  # name은 인덱스 3 (id=0, pwd=1, ban=2, name=3)
             return redirect(url_for('index'))
         else:
             flash('학번 또는 비밀번호가 일치하지 않습니다.')
