@@ -276,3 +276,8 @@ def get_score(id):
     except mysql.connector.Error as err:
         print(f"Score retrieval failed: {err}")
         return []
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
