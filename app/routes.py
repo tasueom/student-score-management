@@ -54,7 +54,7 @@ def signin():
         else:
             print(f"DEBUG - student가 None입니다. 학번: {id}")
         
-        if student and chk_pw(pwd, student[1]):
+        if student and chk_pw(student[1], pwd):
             session['id'] = id
             session['name'] = student[3]  # name은 인덱스 3 (id=0, pwd=1, ban=2, name=3)
             return redirect(url_for('index'))
