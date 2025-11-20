@@ -41,6 +41,27 @@ def create_database():
         if conn:
             conn.close()
 
+def drop_table():
+    """테이블을 삭제하고 성공 여부를 반환합니다."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(f"DROP TABLE IF EXISTS {TABLE_NAME}")
+        conn.commit()
+        return True
+    except mysql.connector.Error as err:
+        print(f"Table drop failed: {err}")
+        if conn:
+            conn.rollback()
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 def create_table():
     """테이블을 생성하고 성공 여부를 반환합니다."""
     conn = None
