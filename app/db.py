@@ -48,7 +48,9 @@ def drop_table():
     try:
         conn = get_conn()
         cursor = conn.cursor()
+        # 외래키 제약 때문에 scores를 먼저 삭제
         cursor.execute(f"DROP TABLE IF EXISTS {TABLE_NAME}")
+        cursor.execute("DROP TABLE IF EXISTS students")
         conn.commit()
         return True
     except mysql.connector.Error as err:
@@ -69,18 +71,31 @@ def create_table():
     try:
         conn = get_conn()
         cursor = conn.cursor()
+        
+        # students 테이블 생성 (먼저 생성해야 외래키 참조 가능)
+        cursor.execute("""
+            CREATE TABLE students (
+                id TEXT PRIMARY KEY,
+                pwd TEXT,
+                ban INT,
+                name VARCHAR(50)
+            );
+        """)
+        
+        # scores 테이블 생성 (students.id를 참조하는 외래키)
         cursor.execute(f"""
-                        CREATE TABLE {TABLE_NAME} (
-                            id INT AUTO_INCREMENT PRIMARY KEY,
-                            name VARCHAR(50),
-                            kor INT,
-                            eng INT,
-                            math INT,
-                            total INT,
-                            average DECIMAL(5,2),
-                            grade CHAR(1)
-                        );
-                    """)
+            CREATE TABLE {TABLE_NAME} (
+                id TEXT PRIMARY KEY,
+                kor INT,
+                eng INT,
+                math INT,
+                total INT,
+                average DECIMAL(5,2),
+                grade CHAR(1),
+                FOREIGN KEY (id) REFERENCES students(id)
+            );
+        """)
+        
         conn.commit()
         return True
     except mysql.connector.Error as err:
