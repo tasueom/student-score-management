@@ -63,6 +63,12 @@ def signin():
             return redirect(url_for('signin'))
     return render_template('signin.html')
 
+@app.route('/signout')
+def signout():
+    session.pop('id', None)
+    session.pop('name', None)
+    return redirect(url_for('index'))
+
 @app.route('/input', methods=['GET', 'POST'])
 def input():
     if request.method == 'POST':
