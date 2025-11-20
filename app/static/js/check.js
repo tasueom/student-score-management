@@ -1,8 +1,10 @@
 function validateForm() {
-    const name = document.getElementById('name').value;
+    const id = document.getElementById('id').value;
     const kor = document.getElementById('kor').value;
     const eng = document.getElementById('eng').value;
     const math = document.getElementById('math').value;
+    const pwd = document.getElementById('pwd').value;
+    const pwd_confirm = document.getElementById('pwd_confirm').value;
     
     // 학번 검증
     if (id === '') {
