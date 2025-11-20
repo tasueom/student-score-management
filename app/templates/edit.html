@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}성적 수정{% endblock %}
+{% block content %}
+<main>
+    <h2>성적 수정</h2>
+</main>
+<div>
+    {% if score %}
+    <form method="post" action="{{ url_for('edit', id=id) }}" onsubmit="return validateForm()">
+        <div>
+            <label for="kor">국어</label>
+            <input type="number" id="kor" name="kor" required value="{{ score[0] }}">
+        </div>
+        <div>
+            <label for="eng">영어</label>
+            <input type="number" id="eng" name="eng" required value="{{ score[1] }}">
+        </div>
+        <div>
+            <label for="math">수학</label>
+            <input type="number" id="math" name="math" required value="{{ score[2] }}">
+        </div>
+        <div>
+            <label for="total">총점</label>
+            <input type="number" id="total" name="total" readonly value="{{ score[3] }}">
+        </div>
+        <div>
+            <label for="average">평균</label>
+            <input type="number" id="average" name="average" readonly value="{{ score[4] }}">
+        </div>
+        <div>
+            <label for="grade">등급</label>
+            <input type="text" id="grade" name="grade" readonly value="{{ score[5] }}">
+        </div>
+        <div>
+            <button type="submit">수정</button>
+        </div>
+    </form>
+    {% else %}
+    <p>성적이 존재하지 않습니다.</p>
+    {% endif %}
+</div>
+{% endblock %}

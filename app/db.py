@@ -172,6 +172,27 @@ def insert_student(id, pwd_hash, ban, name):
         if conn:
             conn.close()
 
+def update_score(id, kor, eng, math, total, average, grade):
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE {TABLE_NAME} SET kor = %s, eng = %s, math = %s, total = %s, average = %s, grade = %s WHERE id = %s", (kor, eng, math, total, average, grade, id))
+        conn.commit()
+        return True
+    except mysql.connector.Error as err:
+        print(f"Score update failed: {err}")
+        if conn:
+            conn.rollback()
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 def get_student(id):
     """학생을 조회하고 튜플을 반환합니다. (id, pwd, ban, name)"""
     conn = None

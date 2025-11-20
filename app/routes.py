@@ -89,6 +89,24 @@ def view():
     chart_data = service.format_chart_data(subject_averages)
     return render_template('view.html', scores=scores, chart_data=chart_data)
 
+@app.route('/edit/<id>', methods=['GET', 'POST'])
+def edit(id):
+    if session.get('id') != 'admin':
+        flash('관리자만 접근할 수 있습니다.')
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        kor = int(request.form['kor'])
+        eng = int(request.form['eng'])
+        math = int(request.form['math'])
+        total, average, grade = service.calculate(kor, eng, math)
+        if db.update_score(id, kor, eng, math, total, average, grade):
+            flash('성적이 성공적으로 수정되었습니다.')
+        else:
+            flash('성적 수정에 실패했습니다.')
+        return redirect(url_for('view'))
+    score = db.get_score(id)
+    return render_template('edit.html', score=score, id=id)
+
 @app.route('/export_excel')
 def export_excel():
     if session.get('id') != 'admin':
