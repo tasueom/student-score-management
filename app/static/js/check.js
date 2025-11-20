@@ -4,9 +4,9 @@ function validateForm() {
     const eng = document.getElementById('eng').value;
     const math = document.getElementById('math').value;
     
-    // 이름 검증
-    if (name === '') {
-        alert('이름을 입력해주세요.');
+    // 학번 검증
+    if (id === '') {
+        alert('학번을 입력해주세요.');
         return false;
     }
     

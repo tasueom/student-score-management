@@ -18,12 +18,12 @@ def index():
 @app.route('/input', methods=['GET', 'POST'])
 def input():
     if request.method == 'POST':
-        name = request.form['name']
+        id = request.form['id']  # 폼에서 name 필드를 student_id로 사용
         kor = int(request.form['kor'])
         eng = int(request.form['eng'])
         math = int(request.form['math'])
         total, average, grade = service.calculate(kor, eng, math)
-        if db.insert_score(name, kor, eng, math, total, average, grade):
+        if db.insert_score(id, kor, eng, math, total, average, grade):
             flash('성적이 성공적으로 저장되었습니다.')
         else:
             flash('성적 저장에 실패했습니다.')

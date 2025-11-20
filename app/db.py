@@ -110,7 +110,7 @@ def create_table():
         if conn:
             conn.close()
 
-def insert_score(name, kor, eng, math, total, average, grade):
+def insert_score(id, kor, eng, math, total, average, grade):
     """성적을 삽입하고 성공 여부를 반환합니다."""
     conn = None
     cursor = None
@@ -118,9 +118,9 @@ def insert_score(name, kor, eng, math, total, average, grade):
         conn = get_conn()
         cursor = conn.cursor()
         cursor.execute(f"""
-                        INSERT INTO {TABLE_NAME} (name, kor, eng, math, total, average, grade)
+                        INSERT INTO {TABLE_NAME} (id, kor, eng, math, total, average, grade)
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    """, (name, kor, eng, math, total, average, grade))
+                    """, (id, kor, eng, math, total, average, grade))
         conn.commit()
         return True
     except mysql.connector.Error as err:
@@ -136,13 +136,18 @@ def insert_score(name, kor, eng, math, total, average, grade):
             conn.close()
 
 def get_scores():
-    """성적을 조회하고 리스트를 반환합니다."""
+    """성적을 조회하고 리스트를 반환합니다. (학생 이름 포함)"""
     conn = None
     cursor = None
     try:
         conn = get_conn()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM {TABLE_NAME}")
+        cursor.execute(f"""
+            SELECT s.id, st.ban, st.name, s.kor, s.eng, s.math, s.total, s.average, s.grade
+            FROM {TABLE_NAME} s
+            JOIN students st ON s.id = st.id
+            ORDER BY s.id
+        """)
         return cursor.fetchall()
     except mysql.connector.Error as err:
         print(f"Score retrieval failed: {err}")
