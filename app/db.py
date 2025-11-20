@@ -2,6 +2,7 @@ import mysql.connector
 import werkzeug.security
 from dotenv import load_dotenv
 import os
+import random
 
 # .env 파일 로드
 load_dotenv()
@@ -188,6 +189,38 @@ def get_student(id):
             cursor.close()
         if conn:
             conn.close()
+
+def insert_test_students():
+    """테스트용 학생 10명을 삽입하고 성공 여부를 반환합니다."""
+    test_students = [
+        ('001', '1234', 1, '김철수'),
+        ('002', '1234', 1, '이영희'),
+        ('003', '1234', 1, '박민수'),
+        ('004', '1234', 2, '최지은'),
+        ('005', '1234', 2, '정수진'),
+        ('006', '1234', 2, '강동원'),
+        ('007', '1234', 3, '윤서연'),
+        ('008', '1234', 3, '임태현'),
+        ('009', '1234', 3, '한소희'),
+        ('010', '1234', 3, '조인성'),
+    ]
+    
+    success_count = 0
+    for id, pwd, ban, name in test_students:
+        # 이미 존재하는 학생은 건너뛰기
+        if check_id(id):
+            print(f"학생 {id} ({name})는 이미 존재합니다. 건너뜁니다.")
+            continue
+        
+        pwd_hash = werkzeug.security.generate_password_hash(pwd)
+        if insert_student(id, pwd_hash, ban, name):
+            success_count += 1
+            print(f"학생 {id} ({name}) 삽입 완료")
+        else:
+            print(f"학생 {id} ({name}) 삽입 실패")
+    
+    print(f"\n총 {success_count}명의 학생이 삽입되었습니다.")
+    return success_count > 0
 
 def get_no_score_students():
     """성적을 입력하지 않은 학생을 조회하고 리스트를 반환합니다. (admin 제외)"""
