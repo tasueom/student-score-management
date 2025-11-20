@@ -85,7 +85,8 @@ def input():
     if session.get('id') != 'admin':
         flash('관리자만 접근할 수 있습니다.')
         return redirect(url_for('index'))
-    return render_template('input.html')
+    no_score_students = db.get_no_score_students()
+    return render_template('input.html', no_score_students=no_score_students)
 
 @app.route('/view')
 def view():

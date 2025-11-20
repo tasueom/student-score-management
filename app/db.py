@@ -167,6 +167,24 @@ def get_student(id):
         if conn:
             conn.close()
 
+def get_no_score_students():
+    """성적을 입력하지 않은 학생을 조회하고 리스트를 반환합니다. (admin 제외)"""
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, name FROM students WHERE id != 'admin' AND id NOT IN (SELECT id FROM scores)")
+        return cursor.fetchall()
+    except mysql.connector.Error as err:
+        print(f"No score students retrieval failed: {err}")
+        return []
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 def insert_score(id, kor, eng, math, total, average, grade):
     """성적을 삽입하고 성공 여부를 반환합니다."""
     conn = None
