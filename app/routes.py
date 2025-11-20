@@ -59,6 +59,11 @@ def signout():
 
 @app.route('/input', methods=['GET', 'POST'])
 def input():
+    # admin 체크를 먼저 수행 (GET/POST 모두)
+    if session.get('id') != 'admin':
+        flash('관리자만 접근할 수 있습니다.')
+        return redirect(url_for('index'))
+    
     if request.method == 'POST':
         id = request.form['id']  # 폼에서 name 필드를 student_id로 사용
         kor = int(request.form['kor'])
@@ -70,9 +75,7 @@ def input():
         else:
             flash('성적 저장에 실패했습니다.')
         return redirect(url_for('index'))
-    if session.get('id') != 'admin':
-        flash('관리자만 접근할 수 있습니다.')
-        return redirect(url_for('index'))
+    
     no_score_students = db.get_no_score_students()
     return render_template('input.html', no_score_students=no_score_students)
 
