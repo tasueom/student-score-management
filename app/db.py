@@ -150,13 +150,13 @@ def insert_student(id, pwd_hash, ban, name):
             conn.close()
 
 def get_student(id):
-    """학생을 조회하고 튜플을 반환합니다."""
+    """학생을 조회하고 튜플을 반환합니다. (id, pwd, ban, name)"""
     conn = None
     cursor = None
     try:
         conn = get_conn()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM students WHERE id = %s", (id,))
+        cursor.execute("SELECT id, pwd, ban, name FROM students WHERE id = %s", (id,))
         return cursor.fetchone()
     except mysql.connector.Error as err:
         print(f"Student retrieval failed: {err}")
