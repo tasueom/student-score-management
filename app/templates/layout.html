@@ -20,10 +20,13 @@
         <h1>성적표 저장 프로그램</h1>
     </header>
     <nav>
-        <ul>
+        <ul id="menu">
             <li><a href="{{ url_for('index') }}">홈</a></li>
             <li><a href="{{ url_for('input') }}">성적 입력</a></li>
             <li><a href="{{ url_for('view') }}">성적 조회</a></li>
+        </ul>
+        <ul id="user-menu">
+            <li><a href="{{ url_for('signup') }}">회원가입</a></li>
         </ul>
     </nav>
     {% block content %}{% endblock %}

@@ -1,4 +1,5 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
+from werkzeug.security import generate_password_hash as gen_pw, check_password_hash as chk_pw
 from app import app, service, db
 import os
 
@@ -14,6 +15,25 @@ def index():
         readme_content = 'README.md 파일을 찾을 수 없습니다.'
     
     return render_template('index.html', readme_content=readme_content)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        id = request.form['id']
+        if db.check_id(id):
+            flash('이미 존재하는 학번입니다.')
+            return redirect(url_for('signup'))
+        pwd = request.form['pwd']
+        pwd_hash = gen_pw(pwd)
+        ban = request.form['ban']
+        name = request.form['name']
+        if db.insert_student(id, pwd_hash, ban, name):
+            flash('회원가입이 성공적으로 완료되었습니다.')
+            return redirect(url_for('signin'))
+        else:
+            flash('회원가입에 실패했습니다.')
+            return redirect(url_for('signup'))
+    return render_template('signup.html')
 
 @app.route('/input', methods=['GET', 'POST'])
 def input():

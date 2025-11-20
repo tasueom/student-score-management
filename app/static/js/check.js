@@ -31,6 +31,12 @@ function validateForm() {
         alert('국어, 영어, 수학 점수는 0에서 100 사이의 정수여야 합니다.');
         return false;
     }
+
+    // 비밀번호 확인
+    if (pwd !== pwd_confirm) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return false;
+    }
     
     return true;
 }

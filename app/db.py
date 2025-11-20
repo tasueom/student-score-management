@@ -110,6 +110,45 @@ def create_table():
         if conn:
             conn.close()
 
+def check_id(id):
+    """학번이 존재하는지 확인합니다."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM students WHERE id = %s", (id,))
+        return cursor.fetchone() is not None
+    except mysql.connector.Error as err:
+        print(f"ID check failed: {err}")
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+def insert_student(id, pwd_hash, ban, name):
+    """학생을 삽입하고 성공 여부를 반환합니다."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(f"INSERT INTO students (id, pwd, ban, name) VALUES (%s, %s, %s, %s)", (id, pwd_hash, ban, name))
+        conn.commit()
+        return True
+    except mysql.connector.Error as err:
+        print(f"Student insertion failed: {err}")
+        if conn:
+            conn.rollback()
+        return False
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 def insert_score(id, kor, eng, math, total, average, grade):
     """성적을 삽입하고 성공 여부를 반환합니다."""
     conn = None
