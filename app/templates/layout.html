@@ -26,10 +26,11 @@
             <li><a href="{{ url_for('view') }}">성적 조회</a></li>
         </ul>
         <ul id="user-menu">
-            <li><a href="{{ url_for('signup') }}">회원가입</a></li>
             {% if id %}
-            
+            <li>{{ name }}</li>
+            <li><a href="{{ url_for('signout') }}">로그아웃</a></li>
             {% else %}
+            <li><a href="{{ url_for('signup') }}">회원가입</a></li>
             <li><a href="{{ url_for('signin') }}">로그인</a></li>
             {% endif %}
         </ul>
