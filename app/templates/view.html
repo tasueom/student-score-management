@@ -58,10 +58,12 @@
 </div>
 {% endblock %}
 {% block scripts %}
+{% if scores and chart_data %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
 <script>
     const chartData = {{ chart_data|tojson }};
     initSubjectChart(chartData);
 </script>
+{% endif %}
 {% endblock %}
