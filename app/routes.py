@@ -71,8 +71,13 @@ def input():
         eng = int(request.form['eng'])
         math = int(request.form['math'])
         total, average, grade = service.calculate(kor, eng, math)
-        if db.insert_score(id, kor, eng, math, total, average, grade):
+        result = db.insert_score(id, kor, eng, math, total, average, grade)
+        if result == True:
             flash('성적이 성공적으로 저장되었습니다.')
+        elif result == 'duplicate':
+            flash('성적 저장에 실패했습니다. 이미 성적이 입력된 학번입니다.')
+        elif result == 'foreign_key':
+            flash('성적 저장에 실패했습니다. 가입된 학번이 아닙니다.')
         else:
             flash('성적 저장에 실패했습니다.')
         return redirect(url_for('view'))
