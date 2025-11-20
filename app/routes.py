@@ -139,11 +139,13 @@ def upload_csv():
     success_count = 0
     for _, row in df.iterrows():
         id = str(row['id']).strip()
+        print(f"[CSV] 읽은 학번: '{id}' (타입: {type(id)}, 길이: {len(id)})")
         kor = int(row['kor'])
         eng = int(row['eng'])
         math = int(row['math'])
         total, average, grade = service.calculate(kor, eng, math)
         result = db.insert_score(id, kor, eng, math, total, average, grade)
+        print(f"[CSV] 학번 '{id}' 삽입 결과: {result}")
         if result == True:
             success_count += 1
         elif result == 'duplicate':
@@ -162,7 +164,8 @@ def upload_json():
         flash('관리자만 접근할 수 있습니다.')
         return redirect(url_for('index'))
     file = request.files['file']
-    df = pd.read_json(file)
+    # JSON을 읽을 때 id를 문자열로 유지하도록 dtype 지정
+    df = pd.read_json(file, dtype={'id': str})
     success_count = 0
     for _, row in df.iterrows():
         id = str(row['id']).strip()
