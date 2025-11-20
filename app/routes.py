@@ -41,6 +41,19 @@ def signin():
         id = request.form['id']
         pwd = request.form['pwd']
         student = db.get_student(id)
+        
+        # 디버깅: student 데이터 확인
+        if student:
+            print(f"DEBUG - student: {student}")
+            print(f"DEBUG - student[0] (id): {student[0]}")
+            print(f"DEBUG - student[1] (pwd_hash): {student[1]}")
+            print(f"DEBUG - student[2] (ban): {student[2]}")
+            print(f"DEBUG - student[3] (name): {student[3]}")
+            print(f"DEBUG - 입력한 비밀번호: {pwd}")
+            print(f"DEBUG - 비밀번호 검증 결과: {chk_pw(pwd, student[1])}")
+        else:
+            print(f"DEBUG - student가 None입니다. 학번: {id}")
+        
         if student and chk_pw(pwd, student[1]):
             session['id'] = id
             session['name'] = student[3]  # name은 인덱스 3 (id=0, pwd=1, ban=2, name=3)
