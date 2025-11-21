@@ -393,6 +393,50 @@ def get_scores():
         if conn:
             conn.close()
 
+def get_scores_count():
+    """전체 성적 개수를 반환합니다."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT COUNT(*) FROM {TABLE_NAME}")
+        result = cursor.fetchone()
+        return result[0] if result else 0
+    except mysql.connector.Error as err:
+        print(f"Score count retrieval failed: {err}")
+        return 0
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+def get_scores_paginated(page=1, per_page=10):
+    """페이징된 성적을 조회하고 리스트를 반환합니다. (학생 이름 포함)"""
+    conn = None
+    cursor = None
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        offset = (page - 1) * per_page
+        cursor.execute(f"""
+            SELECT s.id, st.ban, st.name, s.kor, s.eng, s.math, s.total, s.average, s.grade
+            FROM {TABLE_NAME} s
+            JOIN students st ON s.id = st.id
+            ORDER BY s.id
+            LIMIT %s OFFSET %s
+        """, (per_page, offset))
+        return cursor.fetchall()
+    except mysql.connector.Error as err:
+        print(f"Paginated score retrieval failed: {err}")
+        return []  # 빈 리스트 반환
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 def get_subject_averages():
     """과목별 평균 점수를 조회하고 튜플로 반환합니다. (국어, 영어, 수학)"""
     conn = None

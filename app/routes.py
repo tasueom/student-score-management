@@ -90,10 +90,26 @@ def view():
     if session.get('id') != 'admin':
         flash('관리자만 접근할 수 있습니다.')
         return redirect(url_for('index'))
-    scores = db.get_scores()
+    
+    # 페이지 번호 가져오기 (기본값: 1)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # 페이지당 항목 수
+    
+    # 페이징된 성적 조회
+    scores = db.get_scores_paginated(page, per_page)
+    total_count = db.get_scores_count()
+    total_pages = (total_count + per_page - 1) // per_page  # 올림 계산
+    
+    # 과목별 평균은 전체 데이터 기준으로 계산
     subject_averages = db.get_subject_averages()
     chart_data = service.format_chart_data(subject_averages)
-    return render_template('view.html', scores=scores, chart_data=chart_data)
+    
+    return render_template('view.html', 
+                         scores=scores, 
+                         chart_data=chart_data,
+                         page=page,
+                         total_pages=total_pages,
+                         total_count=total_count)
 
 @app.route('/edit/<id>', methods=['GET', 'POST'])
 def edit(id):
