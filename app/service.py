@@ -4,6 +4,7 @@ from PIL import Image
 import re
 from io import BytesIO
 import base64
+import pandas as pd
 
 # Tesseract 실행 파일 경로, 아래 구문은 항상 나와야함
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -99,3 +100,15 @@ def extract_info(file):
     img_base64 = base64.b64encode(img_byte_arr.getvalue()).decode('utf-8')
     
     return id, kor, eng, math, img_base64
+
+def export_excel(scores):
+    """성적 데이터를 엑셀 파일로 내보내는 함수"""
+    
+    df = pd.DataFrame(scores, columns=['학번', '반', '이름', '국어', '영어', '수학', '총점', '평균', '등급'])
+    
+    # Excel 파일을 BytesIO에 저장
+    excel_buffer = BytesIO()
+    df.to_excel(excel_buffer, index=False, engine='openpyxl')
+    excel_buffer.seek(0)
+    
+    return excel_buffer

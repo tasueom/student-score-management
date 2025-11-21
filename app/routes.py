@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import render_template, request, redirect, url_for, flash, session, send_file
 from werkzeug.security import generate_password_hash as gen_pw, check_password_hash as chk_pw
 import pandas as pd
 from app import app, service, db
@@ -129,9 +129,14 @@ def export_excel():
     if session.get('id') != 'admin':
         flash('관리자만 접근할 수 있습니다.')
         return redirect(url_for('index'))
-    flash("준비중입니다.")
-    return redirect(url_for('view'))
-
+    scores = db.get_scores()
+    excel_file = service.export_excel(scores)
+    return send_file(
+        excel_file,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name='성적표.xlsx'
+    )
 @app.route('/export_pdf')
 def export_pdf():
     if session.get('id') != 'admin':
